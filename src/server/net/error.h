@@ -11,3 +11,5 @@ typedef struct error {
 }error_t;
 
 const error_t errors[] = {};
+
+void print_error_message(error_t err);
