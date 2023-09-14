@@ -5,9 +5,9 @@
 #define NO_SPACE_LEFT 2
 #define EXISTS 3
 
-typedef struct error_message {
+typedef struct error {
         opcode_t err_code;
         char* msg;
-}error_message_t;
+}error_t;
 
-const error_message_t[] = {};
+const error_t errors[] = {};

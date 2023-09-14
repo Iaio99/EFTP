@@ -42,7 +42,7 @@ struct ack_package_t {
 
 struct error_package_t {
         opcode_t op = ERROR;
-        error_message_t error;
+        error_t error;
 }
 
 int init_server(void);
