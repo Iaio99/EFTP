@@ -20,7 +20,7 @@ int init_server() {
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons(69);
+    server_addr.sin_port = htons(8069);
 
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
         perror("Bind erro\n");
@@ -28,7 +28,7 @@ int init_server() {
         exit(EXIT_FAILURE);
     }
 
-    printf("Listening on 0.0.0.0:69\n");
+    printf("Listening on 0.0.0.0:8069\n");
 
     return sockfd;
 }
