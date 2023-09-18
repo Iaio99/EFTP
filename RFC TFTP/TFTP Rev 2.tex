@@ -64,8 +64,7 @@ The TFTP header of a packet contains the \verb|opcode| associated with that pack
 Figure 5-1: \verb|RRQ|/\verb|WRQ| packet
 \end{center}
 
-\verb|RRQ| and \verb|WRQ| packets (\verb|opcode|s 1 and 2 respectively) have the format shown in Figure 5-1. The file name is a sequence of bytes in netascii terminated by a zero byte. The mode field contains the string "netascii", "octet", or "mail" (or any combination of upper and lower case, such as "NETASCII", NetAscii", etc.) in netascii indicating the three modes defined in the protocol. A host which receives netascii mode data must translate the data to its own format.  Octet mode is used to transfer a file that is in the 8-bit format of the machine from which the file is being transferred. It is assumed that each type of machine has a single 8-bit format that is more common, and that that format is chosen. If a host receives a octet file and then returns it, the returned file must be identical to the original. Mail mode uses the name of a mail recipient in place of a file and must begin with a \verb|WRQ|. Otherwise it is identical to netascii mode. The mail recipient string should be of the form "username" or "username@hostname". If the second form is used, it allows the
-option of mail forwarding by a relay computer.\\
+\verb|RRQ| and \verb|WRQ| packets (\verb|opcode|s 1 and 2 respectively) have the format shown in Figure 5-1. The file name is a sequence of bytes in netascii terminated by a zero byte. The mode field contains the string "netascii", "octet", or "mail" (or any combination of upper and lower case, such as "NETASCII", NetAscii", etc.) in netascii indicating the three modes defined in the protocol. A host which receives netascii mode data must translate the data to its own format.  Octet mode is used to transfer a file that is in the 8-bit format of the machine from which the file is being transferred. It is assumed that each type of machine has a single 8-bit format that is more common, and that that format is chosen. If a host receives a octet file and then returns it, the returned file must be identical to the original. Mail mode uses the name of a mail recipient in place of a file and must begin with a \verb|WRQ|. Otherwise it is identical to netascii mode. The mail recipient string should be of the form "username" or "username@hostname". If the second form is used, it allows the option of mail forwarding by a relay computer.\\
 
 The discussion above assumes that both the sender and recipient are operating in the same mode, but there is no reason that this has to be the case. For example, one might build a storage server. There is no reason that such a machine needs to translate netascii into its own form of text.  Rather, the sender might send files in netascii, but the storage server might simply store them without translation in 8-bit format. Another such situation is a problem that currently exists on DEC-20 systems. Neither netascii nor octet accesses all the bits in a word. One might create a special mode for such a
 machine which read all the bits in a word, but in which the receiver stored the information in 8-bit format. When such a file is retrieved from the storage site, it must be restored to its original form to be useful, so the reverse mode must also be implemented. The user site will have to remember some information to achieve this. In both of these examples, the request packets would specify octet mode to the foreign host, but the local host would be in some other mode. No such machine or application specific modes have been specified in TFTP, but one would be compatible with this specification.\\
@@ -97,26 +96,12 @@ If a request can not be granted, or some error occurs during the transfer, then 
 
 \section{Negotiation mechanism}
 \subsection{Introduction}
-The option negotiation mechanism proposed in this document is a
-backward-compatible extension to the TFTP protocol. It allows file
-transfer options to be negotiated prior to the transfer using a
-mechanism which is consistent with TFTP's Request Packet format. The
-mechanism is kept simple by enforcing a request-respond-acknowledge
-sequence, similar to the lock-step approach taken by TFTP itself.
-While the option negotiation mechanism is general purpose, in that
-many types of options may be negotiated, it was created to support
-the Blocksize option defined in [2]. Additional options are defined
-in [3].
+The option negotiation mechanism proposed in this document is a backward-compatible extension to the TFTP protocol. It allows file transfer options to be negotiated prior to the transfer using a mechanism which is consistent with TFTP's Request Packet format. The mechanism is kept simple by enforcing a request-respond-acknowledge sequence, similar to the lock-step approach taken by TFTP itself. While the option negotiation mechanism is general purpose, in that many types of options may be negotiated, it was created to support the Blocksize option.\\
 
 \subsection{Packet Formats}
-TFTP options are appended to the Read Request and Write Request
-packets. A new type of TFTP packet, the Option Acknowledgment
-(O\verb|ACK|), is used to acknowledge a client's option negotiation request.
-A new  \verb|ERROR| code, 8, is hereby defined to indicate that a transfer
-should be terminated due to option negotiation.
+TFTP options are appended to the \verb|RRQ| and \verb|WRQ| packets. A new type of TFTP packet, the Option Acknowledgment (\verb|OACK|), is used to acknowledge a client's option negotiation request. A new  \verb|ERROR| code, 8, is hereby defined to indicate that a transfer should be terminated due to option negotiation.\\
 
-Options are appended to a TFTP Read Request or Write Request packet
-as follows:
+Options are appended to a TFTP Read Request or Write Request packet as follows:
 
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+-->
    | opc |filename| 0 | mode | 0 | opt1 | 0 | value1 | 0 | <
@@ -125,138 +110,66 @@ as follows:
     >-------+---+---~~---+---+
    < optN | 0 | valueN | 0 |
     >-------+---+---~~---+---+
+\begin{itemize}
+\item \verb|opc|: The \verb|opcode| field contains either a 1, for \verb|RRQ|, or 2, for \verb|WRQ|.
+\item \verb|filename|: The name of the file to be read or written. This is a NULL-terminated field.
+\item \verb|mode|: The mode of the file transfer: "netascii", "octet", or "mail". This is a NULL-terminated field.
+\item \verb|opt1|: The first option, in case-insensitive ASCII (e.g., blksize). This is a NULL-terminated field.
+\item \verb|value1|: The value associated with the first option, in case-insensitive ASCII. This is a NULL-terminated field.
+\item \verb|optN, valueN|: The final option/value pair. Each NULL-terminated field is specified in case-insensitive ASCII.
+\end{itemize}
 
-   opc
-     The \verb|opcode| field contains either a 1, for Read Requests, or 2,
-     for Write Requests, as defined in [1].
+The options and values are all NULL-terminated, in keeping with the original request format. If multiple options are to be negotiated, they are appended to each other. The order in which options are specified is not significant. The maximum size of a request packet is 512 octets.\\
 
-   filename
-     The name of the file to be read or written, as defined in [1].
-     This is a NULL-terminated field.
-
-   mode
-     The mode of the file transfer: "netascii", "octet", or "mail",
-     as defined in [1]. This is a NULL-terminated field.
-
-   opt1
-     The first option, in case-insensitive ASCII (e.g., blksize).
-     This is a NULL-terminated field.
-
-   value1
-     The value associated with the first option, in case-
-     insensitive ASCII. This is a NULL-terminated field.
-
-   optN, valueN
-     The final option/value pair. Each NULL-terminated field is
-     specified in case-insensitive ASCII.
-
-The options and values are all NULL-terminated, in keeping with the
-original request format. If multiple options are to be negotiated,
-they are appended to each other. The order in which options are
-specified is not significant. The maximum size of a request packet
-is 512 octets.
-
-The O\verb|ACK| packet has the following format:
+The \verb|OACK| packet has the following format:
 
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
    | opc | opt1 | 0 | value1 | 0 | optN | 0 | valueN | 0 |
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
-
-   opc
-     The \verb|opcode| field contains a 6, for Option Acknowledgment.
-
-   opt1
-     The first option acknowledgment, copied from the original
-     request.
-
-   value1
-     The acknowledged value associated with the first option. If
-     and how this value may differ from the original request is
-     detailed in the specification for the option.
-
-   optN, valueN
-     The final option/value acknowledgment pair.
+\begin{itemize}
+\verb|opc|: The \verb|opcode| field contains a 6, for \verb|OACK|.
+\verb|opt1|: The first option acknowledgment, copied from the original request.
+\verb|value1|: The acknowledged value associated with the first option. If and how this value may differ from the original request is detailed in the specification for the option.
+\verb|optN, valueN|: The final option/value acknowledgment pair.
+\end{itemize}
 
 \subsection{Negotiation Protocol}
-The client appends options at the end of the Read Request or Write
-request packet, as shown above. Any number of options may be
-specified; however, an option may only be specified once. The order
-of the options is not significant.\\
+The client appends options at the end of the Read Request or Write request packet, as shown above. Any number of options may be specified; however, an option may only be specified once. The order of the options is not significant.\\
 
-If the server supports option negotiation, and it recognizes one or
-more of the options specified in the request packet, the server may
-respond with an Options Acknowledgment (O\verb|ACK|). Each option the
-server recognizes, and accepts the value for, is included in the
-O\verb|ACK|. Some options may allow alternate values to be proposed, but
-this is an option specific feature. The server must not include in
-the O\verb|ACK| any option which had not been specifically requested by the
-client; that is, only the client may initiate option negotiation.
-Options which the server does not support should be omitted from the
-O\verb|ACK|; they should not cause an  \verb|ERROR| packet to be generated. If the
-value of a supported option is invalid, the specification for that
-option will indicate whether the server should simply omit the option
-from the O\verb|ACK|, respond with an alternate value, or send an  \verb|ERROR|
+If the server supports option negotiation, and it recognizes one or more of the options specified in the request packet, the server may respond with an Options Acknowledgment (O\verb|ACK|). Each option the server recognizes, and accepts the value for, is included in the \verb|OACK|. Some options may allow alternate values to be proposed, but this is an option specific feature. The server must not include in the \verb|OACK| any option which had not been specifically requested by the client; that is, only the client may initiate option negotiation. Options which the server does not support should be omitted from the \verb|OACK|; they should not cause an  \verb|ERROR| packet to be generated. If the value of a supported option is invalid, the specification for that option will indicate whether the server should simply omit the option from the \verb|OACK|, respond with an alternate value, or send an \verb|ERROR|
 packet, with  \verb|ERROR| code 8, to terminate the transfer.\\
 
-An option not acknowledged by the server must be ignored by the
-client and server as if it were never requested. If multiple options
-were requested, the client must use those options which were
-acknowledged by the server and must not use those options which were
-not acknowledged by the server.\\
+An option not acknowledged by the server must be ignored by the client and server as if it were never requested. If multiple options were requested, the client must use those options which were acknowledged by the server and must not use those options which were not acknowledged by the server.\\
 
-When the client appends options to the end of a Read Request packet,
-three possible responses may be returned by the server:
+When the client appends options to the end of a Read Request packet, three possible responses may be returned by the server:
+\begin{itemize}
+\item \verb|OACK| - acknowledge of Read Request and the options;
+\item \verb|DATA| - acknowledge of Read Request, but not the options;
+\item \verb|ERROR| - the request has been denied.
+\end{itemize}
 
-   O\verb|ACK| - acknowledge of Read Request and the options;
+When the client appends options to the end of a Write Request packet, three possible responses may be returned by the server:
+\begin{itemize}
+\item \verb|OACK| - acknowledge of Write Request and the options;
+\item \verb|ACK|  - acknowledge of Write Request, but not the options;
+\item \verb|ERROR| - the request has been denied.
+\end{itemize}
 
-   \verb|DATA| - acknowledge of Read Request, but not the options;
+If a server implementation does not support option negotiation, it will likely ignore any options appended to the client's request. In this case, the server will return a \verb|DATA| packet for a Read Request and an \verb|ACK| packet for a Write Request establishing normal TFTP data transfer. In the event that a server returns an  \verb|ERROR| for a request which carries an option, the client may attempt to repeat the request without appending any options. This implementation option would handle servers which consider extraneous data in the request packet to be erroneous.\\
 
-    \verb|ERROR| - the request has been denied.
+Depending on the original transfer request there are two ways for a client to confirm acceptance of a server's \verb|OACK|. If the transfer was initiated with a Read Request, then an \verb|ACK| (with the data block number set to 0) is sent by the client to confirm the values in the server's \verb|OACK| packet. If the transfer was initiated with a Write Request, then the client begins the transfer with the first \verb|DATA| packet, using the negotiated values. If the client rejects the \verb|OACK|, then it sends an  \verb|ERROR| packet, with  \verb|ERROR| code 8, to the server and the transfer is terminated.\\
 
-When the client appends options to the end of a Write Request packet,
-three possible responses may be returned by the server:
+Once a client acknowledges an O\verb|ACK|, with an appropriate non-\verb|ERROR| response, that client has agreed to use only the options and values
+returned by the server. Remember that the server cannot request an option; it can only respond to them. If the client receives an \verb|OACK| containing an unrequested option, it should respond with an  \verb|ERROR| packet, with  \verb|ERROR| code 8, and terminate the transfer.
 
-   O\verb|ACK| - acknowledge of Write Request and the options;
-
-   \verb|ACK|  - acknowledge of Write Request, but not the options;
-
-    \verb|ERROR| - the request has been denied.
-
-If a server implementation does not support option negotiation, it
-will likely ignore any options appended to the client's request. In
-this case, the server will return a \verb|DATA| packet for a Read Request
-and an \verb|ACK| packet for a Write Request establishing normal TFTP data
-transfer. In the event that a server returns an  \verb|ERROR| for a request
-which carries an option, the client may attempt to repeat the request
-without appending any options. This implementation option would
-handle servers which consider extraneous data in the request packet
-to be erroneous.
-
-Depending on the original transfer request there are two ways for a
-client to confirm acceptance of a server's O\verb|ACK|. If the transfer was
-initiated with a Read Request, then an \verb|ACK| (with the data block
-number set to 0) is sent by the client to confirm the values in the
-server's O\verb|ACK| packet. If the transfer was initiated with a Write
-Request, then the client begins the transfer with the first \verb|DATA|
-packet, using the negotiated values. If the client rejects the O\verb|ACK|,
-then it sends an  \verb|ERROR| packet, with  \verb|ERROR| code 8, to the server and
-the transfer is terminated.
-
-Once a client acknowledges an O\verb|ACK|, with an appropriate non- \verb|ERROR|
-response, that client has agreed to use only the options and values
-returned by the server. Remember that the server cannot request an
-option; it can only respond to them. If the client receives an O\verb|ACK|
-containing an unrequested option, it should respond with an  \verb|ERROR|
-packet, with  \verb|ERROR| code 8, and terminate the transfer.
-
-Examples
-
-Read Request
+Examples:
+\begin{itemize}
+\item Read Request
 
    client                      server
    -------------------------------------------------------
    |1|foofile|0|octet|0|blksize|0|1432|0| -->        \verb|RRQ|
-                  <-- |6|blksize|0|1432|0|  O\verb|ACK|
+                  <-- |6|blksize|0|1432|0|  \verb|OACK|
    |4|0| -->                        \verb|ACK|
                <-- |3|1| 1432 octets of data |  \verb|DATA|
    |4|1| -->                        \verb|ACK|
@@ -265,7 +178,7 @@ Read Request
                <-- |3|3|<1432 octets of data |  \verb|DATA|
    |4|3| -->                        \verb|ACK|
 
-Write Request
+\item Write Request
 
    client                      server
    -------------------------------------------------------
@@ -277,35 +190,22 @@ Write Request
                           <-- |4|2|  \verb|ACK|
    |3|3|<2048 octets of data | -->             \verb|DATA|
                            <-- |4|3|  \verb|ACK|
+\end{itemize}
 
 \subsection{Blocksize Option Specification}
-The TFTP Read Request or Write Request packet is modified to include
-the blocksize option as follows. Note that all fields except "opc"
-are NULL-terminated.
+The TFTP Read Request or Write Request packet is modified to include the blocksize option as follows. Note that all fields except "opc" are NULL-terminated.
 
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
    | opc |filename| 0 | mode | 0 | blksize| 0 | \# octets| 0 |
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
 
-   opc
-     The \verb|opcode| field contains either a 1, for Read Requests, or 2,
-     for Write Requests, as defined in [1].
-
-   filename
-     The name of the file to be read or written, as defined in [1].
-
-   mode
-     The mode of the file transfer: "netascii", "octet", or "mail",
-     as defined in [1].
-
-   blksize
-     The Blocksize option, "blksize" (case in-sensitive).
-
-   \# octets
-     The number of octets in a block, specified in ASCII. Valid
-     values range between "8" and "65464" octets, inclusive. The
-     blocksize refers to the number of data octets; it does not
-     include the four octets of TFTP header.
+\begin{itemize}
+\item \verb|opc|: The \verb|opcode| field contains either a 1, for Read Requests, or 2, for Write Requests.
+\item \verb|filename|: The name of the file to be read or written.
+\item \verb|mode|: The mode of the file transfer: "netascii", "octet", or "mail".
+\item \verb|blksize|: The Blocksize option, "blksize" (case in-sensitive).
+\item \verb|\# octets|: The number of octets in a block, specified in ASCII. Valid values range between "8" and "65464" octets, inclusive. The blocksize refers to the number of data octets; it does not include the four octets of TFTP header.
+\end{itemize}
 
 For example:
 
@@ -313,121 +213,22 @@ For example:
    |  1  | foobar | 0 | octet | 0 | blksize| 0 | 1428 | 0 |
    +-------+--------+---+--------+---+--------+---+--------+---+
 
-is a Read Request, for the file named "foobar", in octet (binary)
-transfer mode, with a block size of 1428 octets (Ethernet MTU, less
-the TFTP, UDP and IP header lengths).
-
-If the server is willing to accept the blocksize option, it sends an
-Option Acknowledgment (O\verb|ACK|) to the client. The specified value must
-be less than or equal to the value specified by the client. The
-client must then either use the size specified in the O\verb|ACK|, or send
-an  \verb|ERROR| packet, with  \verb|ERROR| code 8, to terminate the transfer.
-
-The rules for determining the final packet are unchanged from [1].
-The reception of a data packet with a data length less than the
-negotiated blocksize is the final packet. If the blocksize is
-greater than the amount of data to be transfered, the first packet is
-the final packet. If the amount of data to be transfered is an
-integral multiple of the blocksize, an extra data packet containing
-no data is sent to end the transfer.
-
-\subsubsection{Proof of Concept}
-
-Performance tests were run on the prototype implementation using a
-variety of block sizes. The tests were run on a lightly loaded
-Ethernet, between two HP-UX 9000, in "octet" mode, on 2.25MB files.
-The average (5x) transfer times for paths with (g-time) and without
-(n-time) a intermediate gateway are graphed as follows:
-
-      |
-    37 +   g
-      |
-    35 +
-      |
-    33 +
-      |
-    31 +
-      |
-    29 +
-      |
-    27 +
-      |       g       blocksize  n-time  g-time
-    25 +              ---------  ------  ------
-   s  |    n           512    23.85  37.05
-   e 23 +        g      1024    16.15  25.65
-   c  |               1428    13.70  23.10
-   o 21 +               2048    10.90  16.90
-   n  |               4096    6.85   9.65
-   d 19 +               8192    4.90   6.15
-   s  |
-    17 +          g
-      |       n
-    15 +
-      |        n
-    13 +
-      |
-    11 +          n
-      |              g
-     9 +
-      |
-     7 +              n
-      |                 g
-     5 +                 n
-      "
-     0 +------+------+--+---+------+------+---
-         512  1K | 2K   4K   8K
-             1428
-          blocksize (octets)
-
-The comparisons between transfer times (without a gateway) between
-the standard 512-octet blocksize and the negotiated blocksizes are:
-
-  1024   2x  -32%
-  1428  2.8x  -42%
-  2048   4x  -54%
-  4096   8x  -71%
-  8192  16x  -80%
-
-As was anticipated, the transfer time decreases with an increase in
-blocksize. The reason for the reduction in time is the reduction in
-the number of packets sent. For example, by increasing the blocksize
-from 512 octets to 1024 octets, not only are the number of data
-packets halved, but the number of acknowledgement packets is also
-halved (along with the number of times the data transmitter must wait
-for an \verb|ACK|). A secondary effect is the efficiency gained by reducing
-the per-packet framing and processing overhead.\\
-
-Of course, if the blocksize exceeds the path MTU, IP fragmentation
-and reassembly will begin to add more overhead. This will be more
-noticable the greater the number of gateways in the path.
+is a Read Request, for the file named "foobar", in octet (binary) transfer mode, with a block size of 1428 octets (Ethernet MTU, less the TFTP, UDP and IP header lengths). If the server is willing to accept the blocksize option, it sends an Option Acknowledgment (\verb|OACK|) to the client. The specified value must be less than or equal to the value specified by the client. The client must then either use the size specified in the \verb|OACK|, or send an \verb|ERROR| packet, with  \verb|ERROR| code 8, to terminate the transfer. The reception of a data packet with a data length less than the negotiated blocksize is the final packet. If the blocksize is greater than the amount of data to be transfered, the first packet is the final packet. If the amount of data to be transfered is an integral multiple of the blocksize, an extra data packet containing no data is sent to end the transfer.
 
 \subsection{Timeout Interval Option Specification}
-The TFTP Read Request or Write Request packet is modified to include
-the timeout option as follows:
+The TFTP Read Request or Write Request packet is modified to include the timeout option as follows:
 
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
    | opc |filename| 0 | mode | 0 | timeout| 0 | \# secs | 0 |
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
 
-   opc
-     The \verb|opcode| field contains either a 1, for Read Requests, or 2,
-     for Write Requests, as defined in [1].
-   filename
-     The name of the file to be read or written, as defined in [1].
-     This is a NULL-terminated field.
-
-   mode
-     The mode of the file transfer: "netascii", "octet", or "mail",
-     as defined in [1]. This is a NULL-terminated field.
-
-   timeout
-     The Timeout Interval option, "timeout" (case in-sensitive).
-     This is a NULL-terminated field.
-
-   \# secs
-     The number of seconds to wait before retransmitting, specified
-     in ASCII. Valid values range between "1" and "255" seconds,
-     inclusive. This is a NULL-terminated field.
+\begin{itemize}
+\item \verb|opc|: The \verb|opcode| field contains either a 1, for Read Requests, or 2, for Write Requests
+\item \verb|filename|: The name of the file to be read or written. This is a NULL-terminated field.
+\item \verb|mode|: The mode of the file transfer: "netascii", "octet", or "mail". This is a NULL-terminated field.
+\item \verb|timeout|: The Timeout Interval option, "timeout" (case in-sensitive). This is a NULL-terminated field.
+\item \verb|\# secs|: The number of seconds to wait before retransmitting, specified in ASCII. Valid values range between "1" and "255" seconds, inclusive. This is a NULL-terminated field.
+\end{itemize}
 
 For example:
 
@@ -435,38 +236,23 @@ For example:
    |  1  | foobar | 0 | octet | 0 | timeout| 0 |  1  | 0 |
    +-------+--------+---+--------+---+--------+---+-------+---+
 
-is a Read Request, for the file named "foobar", in octet (binary)
-transfer mode, with a timeout interval of 1 second.
+is a Read Request, for the file named "foobar", in octet (binary) transfer mode, with a timeout interval of 1 second.\\
 
-If the server is willing to accept the timeout option, it sends an
-Option Acknowledgment (O\verb|ACK|) to the client. The specified timeout
-value must match the value specified by the client.
+If the server is willing to accept the timeout option, it sends an Option Acknowledgment (\verb|OACK|) to the client. The specified timeout value must match the value specified by the client.
 
 \subsection{Transfer Size Option Specification}
-The TFTP Read Request or Write Request packet is modified to include
-the tsize option as follows:
+The TFTP Read Request or Write Request packet is modified to include the tsize option as follows:
 
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
    | opc |filename| 0 | mode | 0 | tsize | 0 | size | 0 |
    +-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
-
-   opc
-     The \verb|opcode| field contains either a 1, for Read Requests, or 2,
-     for Write Requests, as defined in [1].
-   filename
-     The name of the file to be read or written, as defined in [1].
-     This is a NULL-terminated field.
-   mode
-     The mode of the file transfer: "netascii", "octet", or "mail",
-     as defined in [1]. This is a NULL-terminated field.
-
-   tsize
-     The Transfer Size option, "tsize" (case in-sensitive). This is
-     a NULL-terminated field.
-
-   size
-     The size of the file to be transfered. This is a NULL-
-     terminated field.
+\begin{itemize}
+\item \verb|opc|: The \verb|opcode| field contains either a 1, for Read Requests, or 2, for Write Requests.
+\item \verb|filename|: The name of the file to be read or written. This is a NULL-terminated field.
+\item \verb|mode|: The mode of the file transfer: "netascii", "octet", or "mail". This is a NULL-terminated field.
+\item \verb|tsize|: The Transfer Size option, "tsize" (case in-sensitive). This is a NULL-terminated field.
+\item \verb|size|: The size of the file to be transfered. This is a NULL-terminated field.
+\end{itemize}
 
 For example:
 
@@ -474,18 +260,10 @@ For example:
    |  2  | foobar | 0 | octet | 0 | tsize | 0 | 673312 | 0 |
    +-------+--------+---+--------+---+--------+---+--------+---+
 
-is a Write Request, with the 673312-octet file named "foobar", in
-octet (binary) transfer mode.
+is a Write Request, with the 673312-octet file named "foobar", in octet (binary) transfer mode.
 
-In Read Request packets, a size of "0" is specified in the request
-and the size of the file, in octets, is returned in the O\verb|ACK|. If the
-file is too large for the client to handle, it may abort the transfer
-with an  \verb|ERROR| packet ( \verb|ERROR| code 3). In Write Request packets, the
-size of the file, in octets, is specified in the request and echoed
-back in the O\verb|ACK|. If the file is too large for the server to handle,
-it may abort the transfer with an  \verb|ERROR| packet ( \verb|ERROR| code 3).
+In Read Request packets, a size of "0" is specified in the request and the size of the file, in octets, is returned in the \verb|OACK|. If the file is too large for the client to handle, it may abort the transfer with an  \verb|ERROR| packet (\verb|ERROR| code 3). In Write Request packets, the size of the file, in octets, is specified in the request and echoed back in the O\verb|ACK|. If the file is too large for the server to handle, it may abort the transfer with an \verb|ERROR| packet ( \verb|ERROR| code 3).
   
-
 \section{Appendix}
   Order of Headers
   
