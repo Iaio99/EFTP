@@ -11,7 +11,7 @@
 #define ERROR 6
 #define NEGOTIATION 7
 
-#define DATA_SIZE 1024
+#define DATA_SIZE 1466
 
 struct command_package_t {
         uint8_t op;
