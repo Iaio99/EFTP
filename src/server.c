@@ -2,7 +2,8 @@
 
 #include "utils/net.h"
 
-int main() {
+int main()
+{
         int server = init_server();
         close(server);
 

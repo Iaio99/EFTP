@@ -6,7 +6,8 @@
 
 #include "net.h"
 
-int init_server() {
+int init_server()
+{
     int sockfd;
     struct sockaddr_in server_addr;
 
