@@ -14,7 +14,6 @@
 #define DATA_SIZE 1024
 
 typedef opcode_t uint8;
-typedef errorcode_t uint16;
 
 struct get_package_t {
         opcode_t op = RRQ;
