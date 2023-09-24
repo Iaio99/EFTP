@@ -3,6 +3,7 @@
 #include <string.h>
 #include <dirent.h>
 
+#include "operations.h"
 
 int get (void)
 {

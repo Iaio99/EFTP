@@ -44,5 +44,3 @@ struct error_package_t {
         opcode_t op = ERROR;
         error_t error;
 }
-
-int init_server(void);
