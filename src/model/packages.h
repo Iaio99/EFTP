@@ -13,34 +13,32 @@
 
 #define DATA_SIZE 1024
 
-typedef opcode_t uint8;
-
 struct get_package_t {
-        opcode_t op = RRQ;
+        uint8_t op = RRQ;
         char *filename;
 }
 
 struct put_package_t {
-        opcode_t op = WRQ;
+        uint8_t op = WRQ;
         char *filename;
 }
 
 struct list_package_t {
-        opcode_t op = LIST;
+        uint8_t op = LIST;
 }
 
 struct data_package_t {
-        opcode_t op = DATA;
+        uint8_t op = DATA;
         int n; //Numero del pacchetto
         char data[DATA_SIZE + 1];
 }
 
 struct ack_package_t {
-        opcode_t op = ACK;
+        uint8_t op = ACK;
         int n; //Numero dell'ACK corrispondente al pacchetto ricevuto.
 }
 
 struct error_package_t {
-        opcode_t op = ERROR;
+        uint8_t op = ERROR;
         error_t error;
 }
