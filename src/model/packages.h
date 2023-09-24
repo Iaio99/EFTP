@@ -9,6 +9,7 @@
 #define DATA 4
 #define ACK 5
 #define ERROR 6
+#define NEGOTIATION 7
 
 #define DATA_SIZE 1024
 
