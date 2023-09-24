@@ -13,18 +13,9 @@
 
 #define DATA_SIZE 1024
 
-struct get_package_t {
-        uint8_t op = RRQ;
-        char *filename;
-}
-
-struct put_package_t {
-        uint8_t op = WRQ;
-        char *filename;
-}
-
-struct list_package_t {
-        uint8_t op = LIST;
+struct command_package_t {
+        uint8_t op;
+        char *path;
 }
 
 struct data_package_t {
