@@ -16,7 +16,7 @@ void list(void)
         struct dirent *entry;
 
         // Apre la directory specificata
-        dir = opendir();
+        dir = opendir("./");
 
         if (dir == NULL) {
             perror("Errore nell'apertura della directory\n");
