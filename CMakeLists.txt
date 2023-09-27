@@ -17,7 +17,6 @@ add_executable(server.elf
 
 add_executable(client.elf 
         src/client.c
-        src/server.c
         src/controller/operations.c
         src/controller/operations.h
 	src/model/error.h
