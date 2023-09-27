@@ -25,7 +25,7 @@ int init_server()
 
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
         perror("Bind erro\n");
-        close(server);
+        close(sockfd);
         exit(EXIT_FAILURE);
     }
 
