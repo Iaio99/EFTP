@@ -15,4 +15,16 @@ add_executable(server.elf
         src/utils/net.h
 )
 
+add_executable(client.elf 
+        src/client.c
+        src/server.c
+        src/controller/operations.c
+        src/controller/operations.h
+	src/model/error.h
+        src/model/packages.h
+        src/utils/net.c
+        src/utils/net.h
+        src/view/view.c
+)
+
 add_compile_options(PRIVATE -Wall -Wextra -Wpedantic -Werror -O2)
