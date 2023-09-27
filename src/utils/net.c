@@ -24,7 +24,7 @@ int init_server()
     server_addr.sin_port = htons(8069);
 
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
-        perror("Bind erro\n");
+        perror("Bind error\n");
         close(sockfd);
         exit(EXIT_FAILURE);
     }
