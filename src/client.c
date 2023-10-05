@@ -19,8 +19,6 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        /*Connessione con backoff*/
-
         menu();
 
         close(clientfd);
