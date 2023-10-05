@@ -1,4 +1,6 @@
 #pragma once
 
-int init_server(void);
+#include <stdint.h>
+
+int init_server(uint16_t port);
 int conneciton_backoff(void);
