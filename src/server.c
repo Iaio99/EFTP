@@ -6,8 +6,10 @@
 
 #include "utils/net.h"
 #include "utils/options.h"
+#include "utils/validation.h"
 
 uint16_t port = 8069;
+
 
 static bool parse_cmd_line(int argc, char **argv) {
 	int c;
@@ -16,7 +18,12 @@ static bool parse_cmd_line(int argc, char **argv) {
 	while ((c = getopt_long(argc, argv, "p:", long_options, NULL)) != -1) {
 		switch (c) {
 			case 'p':
-				port = (uint16_t)strtoul(optarg, NULL, 10);
+				if (validate_port(optarg)) {
+					port = (uint16_t)strtoul(optarg, NULL, 10);
+				} else {
+					perror("Port is not valid\n");
+					return false;
+				}
 				break;
 
 			case 0:
@@ -31,6 +38,9 @@ static bool parse_cmd_line(int argc, char **argv) {
 
 int main(int argc, char **argv)
 {
+	if(!init_validation())
+                exit(EXIT_FAILURE);
+
 	if(!parse_cmd_line(argc, argv)) {
 		exit(EXIT_FAILURE);
 	}

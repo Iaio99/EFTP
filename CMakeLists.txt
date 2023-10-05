@@ -7,6 +7,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(server.elf
         src/server.c
+        src/utils/validation.h
+        src/utils/validation.c
+	src/utils/options.h
         src/controller/operations.c
         src/controller/operations.h
 	src/model/error.h
