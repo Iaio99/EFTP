@@ -6,13 +6,12 @@ void menu(void)
 {
         int opt;
 
-        printf("Quale operazione vuoi eseguire?\n");
-        printf("1. Scaricare un file\n");
-        printf("2. Fare l'upload di un file\n");
-        printf("3. Fare la lista dei file disponibili sul server\n");
-        printf("4. Chiudi la connessione\n");
-
         while(1) {
+                printf("Quale operazione vuoi eseguire?\n");
+                printf("1. Scaricare un file\n");
+                printf("2. Fare l'upload di un file\n");
+                printf("3. Fare la lista dei file disponibili sul server\n");
+                printf("4. Chiudi la connessione\n");
                 scanf("%d", &opt);
 
                 switch(opt) {
@@ -25,9 +24,10 @@ void menu(void)
                         case 4:
                                 return;
                         default:
+                                printf("Opzione non riconosciuta.\n\n\n");
+                                break;
                 }
 
-                printf("Opzione non riconosciuta.\n\n\n");
         }
 
         return;
