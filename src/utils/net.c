@@ -15,7 +15,7 @@ int init_server(uint16_t port)
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     
     if (sockfd == -1) {
-        perror("Errore nella creazione del socket\n");
+        fprintf(stderr, "Errore nella creazione del socket\n");
         exit(EXIT_FAILURE);
     }
 
@@ -25,7 +25,7 @@ int init_server(uint16_t port)
     server_addr.sin_port = htons(port);
 
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
-        perror("Bind error\n");
+        fprintf(stderr, "Bind error\n");
         close(sockfd);
         exit(EXIT_FAILURE);
     }

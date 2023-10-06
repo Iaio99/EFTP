@@ -34,14 +34,14 @@ static bool parse_cmd_line(int argc, char **argv) {
 				if (validate_port(optarg)) {
 					port = (uint16_t)strtoul(optarg, NULL, 10);
 				} else {
-					perror("Port is not valid\n");
+					fprintf(stderr, "Port is not valid\n");
 					return false;
 				}
 			        break;
 			case 0:
 			case '?':
 			default:
-                                perror("Invalid options\n");
+                                fprintf(stderr, "Invalid options\n");
                                 return false;
 		}
 	}

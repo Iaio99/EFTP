@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
         int clientfd = socket(AF_INET, SOCK_DGRAM, 0);
 
         if (clientfd == -1) {
-                perror("Errore nella creazione del socket\n");
+                fprintf(stderr, "Errore nella creazione del socket\n");
                 exit(EXIT_FAILURE);
         }
 
