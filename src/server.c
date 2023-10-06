@@ -15,9 +15,16 @@ static bool parse_cmd_line(int argc, char **argv) {
 	int c;
 //	int option_index;
 
-	while ((c = getopt_long(argc, argv, "p:", long_options, NULL)) != -1) {
+	while ((c = getopt_long(argc, argv, "r:p:h", long_options, NULL)) != -1) {
 		switch (c) {
+			case 'h':
+				puts("Help\n");
+				break;
+			case 'r':
+				printf("%s\n", optarg);
+				break;
 			case 'p':
+				printf("%s\n", optarg);
 				if (validate_port(optarg)) {
 					port = (uint16_t)strtoul(optarg, NULL, 10);
 				} else {

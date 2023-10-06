@@ -5,7 +5,9 @@
 #include <getopt.h>
 
 static struct option long_options[] = {
-	{"port",	optional_argument,	0, 'p'},
+	{"port",	required_argument,	0, 'p'},
+	{"root",	required_argument,	0, 'r'},
+	{"help",	no_argument,		0, 'h'},
 	{0,		0,			0, 0}
 };
 
