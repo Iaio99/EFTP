@@ -38,10 +38,8 @@ static bool parse_cmd_line(int argc, char **argv) {
 					return false;
 				}
 			        break;
-			case 0:
-			case '?':
 			default:
-                                fprintf(stderr, "Invalid options\n");
+                                fprintf(stderr, "Invalid option\n");
                                 return false;
 		}
 	}
