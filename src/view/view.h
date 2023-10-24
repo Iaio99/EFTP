@@ -1,3 +1,3 @@
 #pragma once
 
-void menu (void);
+int client_menu(void);

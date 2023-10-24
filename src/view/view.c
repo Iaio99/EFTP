@@ -2,7 +2,7 @@
 
 #include "view.h"
 
-void menu(void)
+int client_menu(void)
 {
         char options[3] = {'1', '2', '3'};
         char op;
