@@ -5,10 +5,6 @@
 #include <stdbool.h>
 #include <setjmp.h>
 
-#ifdef __unix__
-#include <termios.h>
-#endif
-
 #include "io.h"
 
 jmp_buf leave_buff;
@@ -106,7 +102,7 @@ char multi_choice(char *question, const char choices[], int num)
 
 	for(i = 0; i < num; i++) {
 		possibilities[i] = choices[i];
-		possibilities[i+1] = '/';
+		possibilities[i + 1] = '/';
 	}
 	possibilities[2 * num - 1] = '\0'; // Remove last '/'
 
