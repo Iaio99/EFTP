@@ -28,7 +28,7 @@ char *get_input(char *question, int len, char *buff)
 	printf("%s", question);
 
 	if(fgets(buff, len, stdin) != NULL) {
-		buff[strcspn(buff, "\n")] = 0;
+		buff[strlen(buff) - 1] = 0;
 	} else {
 		printf("EOF received, leaving...\n");
 		fflush(stdout);
@@ -88,11 +88,11 @@ bool yes_or_no(char *question, char yes, char no, bool default_answer)
 			continue;
 
 		// Check the answer
-		if(c == '\n') {
+		if(c == '\n')
 			return default_answer;
-		} else if(c == yes) {
+		else if(c == yes)
 			return true;
-		} else if(c == no) {
+		else if(c == no)
 			return false;
 	}
 }
