@@ -50,18 +50,6 @@ char *get_input(char *question, int len, char *buff)
 }
 
 
-int get_number(char *question, char *fmt, void *buffer)
-{
-	int ret;
-	char ch;
-
-	printf("%s", question);
-	ret = scanf(fmt, buffer);
-	while(((ch = getchar()) != EOF) && (ch != '\n'));
-	return ret;
-}
-
-
 bool yes_or_no(char *question, char yes, char no, bool default_answer, bool insensitive)
 {
 	int extra;
