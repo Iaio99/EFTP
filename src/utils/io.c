@@ -23,28 +23,9 @@ static void leave(void)
 }
 
 
-char *get_input(char *question, int len, char *buff, bool hide)
+char *get_input(char *question, int len, char *buff)
 {
 	printf("%s", question);
-
-#ifdef __unix__
-	struct termios term, oterm;
-
-	if(hide) {
-		fflush(stdout);
-		if (tcgetattr(fileno(stdin), &oterm) == 0) {
-			memcpy(&term, &oterm, sizeof(struct termios));
-			term.c_lflag &= ~(ECHO|ECHONL);
-			tcsetattr(fileno(stdin), TCSAFLUSH, &term);
-		} else {
-			memset(&term, 0, sizeof(struct termios));
-			memset(&oterm, 0, sizeof(struct termios));
-		}
-	}
-#else
-	// Look at termio.h on MSDN to implement similar functionality on Windows
-	(void)hide;
-#endif
 
 	if(fgets(buff, len, stdin) != NULL) {
 		buff[strcspn(buff, "\n")] = 0;
@@ -64,13 +45,6 @@ char *get_input(char *question, int len, char *buff, bool hide)
 			leave();
 		}
 	}
-
-#ifdef __unix__
-	if(hide) {
-		fwrite("\n", 1, 1, stdout);
-		tcsetattr(fileno(stdin), TCSAFLUSH, &oterm);
-	}
-#endif
 
 	return buff;
 }
