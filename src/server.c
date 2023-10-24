@@ -26,7 +26,6 @@ static bool parse_cmd_line(int argc, char **argv) {
                         case 'h':
                                 display_usage(argv);
                                 return false;
-                                break;
 			case 'r':
 				printf("%s\n", optarg);
 				break;
@@ -40,6 +39,7 @@ static bool parse_cmd_line(int argc, char **argv) {
 			        break;
 			default:
                                 fprintf(stderr, "Invalid option\n");
+				display_usage(argv);
                                 return false;
 		}
 	}
