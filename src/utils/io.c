@@ -106,7 +106,10 @@ bool yes_or_no(char *question, char yes, char no, bool default_answer, bool inse
 char multi_choice(char *question, const char choices[], int num)
 {
 	char possibilities[2 * num * sizeof(char)];
-	int i, j = 0, extra;
+	int i;
+	int j = 0;
+	int extra;
+	
 	for(i = 0; i < num; i++) {
 		possibilities[j++] = choices[i];
 		possibilities[j++] = '/';
