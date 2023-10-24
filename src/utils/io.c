@@ -100,16 +100,15 @@ bool yes_or_no(char *question, char yes, char no, bool default_answer)
 
 char multi_choice(char *question, const char choices[], int num)
 {
-	char possibilities[2 * num * sizeof(char)];
+	char possibilities[2 * num];
 	int i;
-	int j = 0;
 	int extra;
 
 	for(i = 0; i < num; i++) {
-		possibilities[j++] = choices[i];
-		possibilities[j++] = '/';
+		possibilities[i] = choices[i];
+		possibilities[i+1] = '/';
 	}
-	possibilities[j - 1] = '\0'; // Remove last '/'
+	possibilities[2 * num - 1] = '\0'; // Remove last '/'
 
 	while(true) {
 		printf("%s [%s]: ", question, possibilities);
