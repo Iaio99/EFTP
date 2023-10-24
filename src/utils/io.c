@@ -50,7 +50,7 @@ char *get_input(char *question, int len, char *buff)
 }
 
 
-bool yes_or_no(char *question, char yes, char no, bool default_answer, bool insensitive)
+bool yes_or_no(char *question, char yes, char no, bool default_answer)
 {
 	int extra;
 
@@ -94,11 +94,6 @@ bool yes_or_no(char *question, char yes, char no, bool default_answer, bool inse
 			return true;
 		} else if(c == no) {
 			return false;
-		} else if(c == toupper(yes)) {
-			if(default_answer || insensitive) return true;
-		} else if(c == toupper(no)) {
-			if(!default_answer || insensitive) return false;
-		}
 	}
 }
 
@@ -109,7 +104,7 @@ char multi_choice(char *question, const char choices[], int num)
 	int i;
 	int j = 0;
 	int extra;
-	
+
 	for(i = 0; i < num; i++) {
 		possibilities[j++] = choices[i];
 		possibilities[j++] = '/';
