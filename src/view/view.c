@@ -4,31 +4,14 @@
 
 void menu(void)
 {
-        int opt;
+        char options[3] = {'1', '2', '3'};
+        char op;
 
-        while(1) {
-                printf("Quale operazione vuoi eseguire?\n");
-                printf("1. Scaricare un file\n");
-                printf("2. Fare l'upload di un file\n");
-                printf("3. Fare la lista dei file disponibili sul server\n");
-                printf("4. Chiudi la connessione\n");
-                scanf("%d", &opt);
+        puts("1. Scaricare un file\n");
+        puts("2. Fare l'upload di un file\n");
+        puts("3. Fare la lista dei file disponibili sul server\n");
+        puts("4. Chiudi la connessione\n");
 
-                switch(opt) {
-                        case 1:
-                                break;
-                        case 2:
-                                break;
-                        case 3:
-                                break;
-                        case 4:
-                                return;
-                        default:
-                                printf("Opzione non riconosciuta.\n\n\n");
-                                break;
-                }
-
-        }
-
-        return;
+        op = multi_choice("Quale operazione vuoi eseguire?", options, 3);
+	return op - '1';
 }
