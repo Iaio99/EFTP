@@ -11,7 +11,7 @@ regex_t regex_port;
 regex_t regex_ip_address;
 
 
-static void print_regerror(int errcode, size_t length, regex_t *compiled)
+static void print_regerror(int errcode, size_t length, const regex_t *compiled)
 {
 	char buffer[length];
 	(void) regerror(errcode, compiled, buffer, length);
@@ -54,7 +54,7 @@ void fini_validation(void)
 }
 
 
-bool validate_ip_address(char *str)
+bool validate_ip_address(const char *str)
 {
 	int ret = regexec(&regex_ip_address, str, 0, NULL, REG_NOTEOL);
 
@@ -67,7 +67,7 @@ bool validate_ip_address(char *str)
 }
 
 
-bool validate_port(char *str)
+bool validate_port(const char *str)
 {
 	int ret = regexec(&regex_port, str, 0, NULL, 0);
 
