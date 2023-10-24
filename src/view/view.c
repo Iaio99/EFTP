@@ -5,7 +5,7 @@
 
 int client_menu(void)
 {
-        char options[3] = {'1', '2', '3'};
+        char options[4] = {'1', '2', '3', '4'};
         char op;
 
         clear_screen();
@@ -15,6 +15,6 @@ int client_menu(void)
         puts("3. Fare la lista dei file disponibili sul server\n");
         puts("4. Chiudere la connessione\n");
 
-        op = multi_choice("Quale operazione vuoi eseguire?", options, 3);
+        op = multi_choice("Quale operazione vuoi eseguire?", options, 4);
 	return op - '1';
 }
