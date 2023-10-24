@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#include "view/view.h"
+#include "view/user.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        menu();
+        user_menu();
 
         close(clientfd);
 

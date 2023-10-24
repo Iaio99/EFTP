@@ -3,7 +3,7 @@
 #include "view.h"
 #include "../utils/io.h"
 
-int client_menu(void)
+int user_menu(void)
 {
         char options[4] = {'1', '2', '3', '4'};
         char op;
