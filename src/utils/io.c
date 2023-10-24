@@ -59,7 +59,8 @@ bool yes_or_no(char *question, char yes, char no, bool default_answer, bool inse
 	no = (char)tolower(no);
 
 	// Which of the two is the default?
-	char s, n;
+	char s;
+	char n;
 	if(default_answer) {
 		s = (char)toupper(yes);
 		n = no;
