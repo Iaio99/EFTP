@@ -28,7 +28,7 @@ char *get_input(char *question, int len, char *buff)
 	printf("%s", question);
 
 	if(fgets(buff, len, stdin) != NULL) {
-		buff[strlen(buff) - 1] = 0;
+		buff[sizeof(buff) - sizeof(char)] = 0;
 	} else {
 		printf("EOF received, leaving...\n");
 		fflush(stdout);
